@@ -31,8 +31,10 @@ public class Summative extends JComponent {
     long desiredFPS = 60;
     long desiredTime = (1000) / desiredFPS;
     // YOUR GAME VARIABLES WOULD GO HERE
+    
     //construct ball
     Rectangle ball = new Rectangle(WIDTH / 2 - 10, HEIGHT / 2 - 10, 20, 20);
+    
     //construct each teams lines of players
     Rectangle player1Goalie1 = new Rectangle(0, HEIGHT / 3 - 20, 40, 40);
     Rectangle player1Goalie2 = new Rectangle(0, 2 * HEIGHT / 3 - 20, 40, 40);
@@ -50,9 +52,11 @@ public class Summative extends JComponent {
     Rectangle player1Forward3 = new Rectangle(4 * WIDTH / 5 - 20, 3 * HEIGHT / 4 - 20, 40, 40);
     Rectangle player2Goalie1 = new Rectangle(WIDTH - 40, HEIGHT / 3 - 20, 40, 40);
     Rectangle player2Goalie2 = new Rectangle(WIDTH - 40, 2 * HEIGHT / 3 - 20, 40, 40);
+    
     //ball velocity
     int velocityX = 4;
     int velocityY = 4;
+    
     //player 1 goalie movement
     boolean aPressed;
     boolean zPressed;
@@ -71,13 +75,19 @@ public class Summative extends JComponent {
     //player 2 forward
     boolean hPressed;
     boolean bPressed;
+    
     //player's score board
     int player1Score = 0;
     int player2Score = 0;
-    //create font
+    
+    //create fonts
     Font myFont = new Font("Comic Sans", Font.BOLD, 100);
+    Font againFont = new Font("Comic Sans", Font.BOLD, 45);
+    Font winFont = new Font("Comic Sans", Font.BOLD, 90);
+    
     //grass color
     Color grass = new Color(41, 196, 72);
+    
     //countdown variables
     int countNum = 4;
     int numX = WIDTH / 2 - 20;
@@ -87,17 +97,17 @@ public class Summative extends JComponent {
     Font countFont = new Font("Comic Sans", Font.BOLD, fontSize);
     long textDelay = 2000;
     long nextSwitch = System.currentTimeMillis() + textDelay;
+    
     //start prompt/screen variables
     boolean spacePressed;
     Font nameFont = new Font("Times New Roman", Font.BOLD, 120);
     Font startFont = new Font("Comic Sans", Font.BOLD, 50);
     BufferedImage startBackground;
+    
     //gameRun variable to tell when the countdown to start once the start screen is gone
+    //controls when the actual game is played
     int gameRun = 0;
-    //play again font
-    Font againFont = new Font("Comic Sans", Font.BOLD, 45);
-    Font winFont = new Font("Comic Sans", Font.BOLD, 90);
-
+    
     // GAME VARIABLES END HERE   
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
@@ -136,8 +146,8 @@ public class Summative extends JComponent {
 
         // GAME DRAWING GOES HERE
 
-        //background of the game
-        //start prompt
+        //draw start prompt if gameRun = 0, if it doesn not, draw game
+        //delay when the prompt to press space appears
         if (gameRun == 0) {
             g.drawImage(startBackground, 0, 0, WIDTH, HEIGHT, null);
             g.setColor(grass);
@@ -202,7 +212,7 @@ public class Summative extends JComponent {
             g.setColor(Color.BLUE);
             g.drawString("" + player2Score, WIDTH / 2 + 135, 100);
 
-            //countdown numbers
+            //countdown numbers if the gameRun = 1 and if the number is greater than 0
             if (countNum > 0 && gameRun == 1) {
                 g.setColor(Color.BLACK);
                 g.setFont(countFont);
@@ -211,6 +221,7 @@ public class Summative extends JComponent {
 
 
         }
+        //for which player reaches 10 points first, write that they won
         if (player1Score == 10) {
             g.setColor(Color.BLACK);
             g.setFont(winFont);
@@ -221,6 +232,8 @@ public class Summative extends JComponent {
             g.setFont(winFont);
             g.drawString("Blue Team Wins!", 30, HEIGHT / 2);
         }
+        
+        //when the gamerun = 2 ask they players to play again
         if (gameRun == 2) {
             g.setFont(againFont);
             g.drawString("Press The Space Bar To Play again", 15, 2 * HEIGHT / 3);
@@ -232,6 +245,7 @@ public class Summative extends JComponent {
     // This is run before the game loop begins!
     public void preSetup() {
         // Any of your pre setup before the loop starts should go here
+        //load background image for the start screen
         startBackground = loadImage("images/fooseball_01.jpg");
     }
 
