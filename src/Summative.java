@@ -25,7 +25,7 @@ public class Summative extends JComponent {
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
     //Title of the window
-    String title = "My Game";
+    String title = "Foosball: 1 VS 1";
     // sets the framerate and delay for our game
     // you just need to select an approproate framerate
     long desiredFPS = 60;
@@ -94,6 +94,9 @@ public class Summative extends JComponent {
     BufferedImage startBackground;
     //gameRun variable to tell when the countdown to start once the start screen is gone
     int gameRun = 0;
+    //play again font
+    Font againFont = new Font("Comic Sans", Font.BOLD, 45);
+    Font winFont = new Font("Comic Sans", Font.BOLD, 90);
 
     // GAME VARIABLES END HERE   
     // Constructor to create the Frame and place the panel in
@@ -135,7 +138,7 @@ public class Summative extends JComponent {
 
         //background of the game
         //start prompt
-        if (spacePressed == false) {
+        if (gameRun == 0) {
             g.drawImage(startBackground, 0, 0, WIDTH, HEIGHT, null);
             g.setColor(grass);
             g.setFont(nameFont);
@@ -210,11 +213,17 @@ public class Summative extends JComponent {
         }
         if (player1Score == 10) {
             g.setColor(Color.BLACK);
-            g.setFont(myFont);
-            g.drawString("Red Team Wins!", 75, HEIGHT / 2);
+            g.setFont(winFont);
+            g.drawString("Red Team Wins!", 50, HEIGHT / 2);
         }
         if (player2Score == 10) {
-            g.drawString("Blue Team Wins!", 75, HEIGHT / 2);
+            g.setColor(Color.BLACK);
+            g.setFont(winFont);
+            g.drawString("Blue Team Wins!", 30, HEIGHT / 2);
+        }
+        if (gameRun == 2) {
+            g.setFont(againFont);
+            g.drawString("Press The Space Bar To Play again", 15, 2 * HEIGHT / 3);
         }
         // GAME DRAWING ENDS HERE
     }
@@ -246,11 +255,7 @@ public class Summative extends JComponent {
             // all your game rules and move is done in here
             // GAME LOGIC STARTS HERE 
 
-            if (spacePressed == false) {
-                gameRun = 0;
-            } else {
-                gameRun = 1;
-            }
+
             if (gameRun == 1) { //gameRun = 1, create game Run variable
                 if (countNum > 0) {
                     countdown();
@@ -340,11 +345,19 @@ public class Summative extends JComponent {
                     }
 
                     if (player1Score == 10 || player2Score == 10) {
-                        done = true;
+                        gameRun = 2;
                     }
 
 
                 }
+            }
+
+            if (gameRun == 2) {
+                if (spacePressed) {
+                    gameRun = 1;
+                    resetVariables();
+                }
+
             }
             // GAME LOGIC ENDS HERE 
             // update the drawing (calls paintComponent)
@@ -483,6 +496,10 @@ public class Summative extends JComponent {
                 mPressed = false;
             }
 
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                spacePressed = false;
+
+            }
 
         }
     }
@@ -753,5 +770,16 @@ public class Summative extends JComponent {
         }
 
         return img;
+    }
+
+    public void resetVariables() {
+        player1Score = 0;
+        player2Score = 0;
+        //countdown variables
+        countNum = 4;
+        numX = WIDTH / 2 - 20;
+        numY = HEIGHT / 2 + 40;
+        fontSize = 80;
+        r = 0;
     }
 }
