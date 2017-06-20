@@ -31,10 +31,8 @@ public class Summative extends JComponent {
     long desiredFPS = 60;
     long desiredTime = (1000) / desiredFPS;
     // YOUR GAME VARIABLES WOULD GO HERE
-    
     //construct ball
     Rectangle ball = new Rectangle(WIDTH / 2 - 10, HEIGHT / 2 - 10, 20, 20);
-    
     //construct each teams lines of players
     Rectangle player1Goalie1 = new Rectangle(0, HEIGHT / 3 - 20, 40, 40);
     Rectangle player1Goalie2 = new Rectangle(0, 2 * HEIGHT / 3 - 20, 40, 40);
@@ -52,11 +50,9 @@ public class Summative extends JComponent {
     Rectangle player1Forward3 = new Rectangle(4 * WIDTH / 5 - 20, 3 * HEIGHT / 4 - 20, 40, 40);
     Rectangle player2Goalie1 = new Rectangle(WIDTH - 40, HEIGHT / 3 - 20, 40, 40);
     Rectangle player2Goalie2 = new Rectangle(WIDTH - 40, 2 * HEIGHT / 3 - 20, 40, 40);
-    
     //ball velocity
     int velocityX = 4;
     int velocityY = 4;
-    
     //player 1 goalie movement
     boolean aPressed;
     boolean zPressed;
@@ -75,19 +71,13 @@ public class Summative extends JComponent {
     //player 2 forward
     boolean hPressed;
     boolean bPressed;
-    
     //player's score board
     int player1Score = 0;
     int player2Score = 0;
-    
-    //create fonts
+    //create font
     Font myFont = new Font("Comic Sans", Font.BOLD, 100);
-    Font againFont = new Font("Comic Sans", Font.BOLD, 45);
-    Font winFont = new Font("Comic Sans", Font.BOLD, 90);
-    
     //grass color
     Color grass = new Color(41, 196, 72);
-    
     //countdown variables
     int countNum = 4;
     int numX = WIDTH / 2 - 20;
@@ -97,17 +87,17 @@ public class Summative extends JComponent {
     Font countFont = new Font("Comic Sans", Font.BOLD, fontSize);
     long textDelay = 2000;
     long nextSwitch = System.currentTimeMillis() + textDelay;
-    
     //start prompt/screen variables
     boolean spacePressed;
     Font nameFont = new Font("Times New Roman", Font.BOLD, 120);
     Font startFont = new Font("Comic Sans", Font.BOLD, 50);
     BufferedImage startBackground;
-    
-    //gameRun variable to tell when the countdown to start once the start screen is gone
-    //controls when the actual game is played
+    //gameRun variable to tell when the actual game is to play, after start screen &if they want to play again
     int gameRun = 0;
-    
+    //fonts for the winner and play again prompt
+    Font againFont = new Font("Comic Sans", Font.BOLD, 45);
+    Font winFont = new Font("Comic Sans", Font.BOLD, 90);
+
     // GAME VARIABLES END HERE   
     // Constructor to create the Frame and place the panel in
     // You will learn more about this in Grade 12 :)
@@ -145,15 +135,14 @@ public class Summative extends JComponent {
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
         // GAME DRAWING GOES HERE
-
-        //draw start prompt if gameRun = 0, if it doesn not, draw game
-        //delay when the prompt to press space appears
+        //start screen / prompt if game run = 0, if not zero, draw the foosball game
         if (gameRun == 0) {
             g.drawImage(startBackground, 0, 0, WIDTH, HEIGHT, null);
             g.setColor(grass);
             g.setFont(nameFont);
             g.drawString("FOOSBALL:", 50, HEIGHT / 3);
             g.drawString("1 VS 1", 250, HEIGHT / 2 + 30);
+            //delay when the prompt shows up
             if (System.currentTimeMillis() >= nextSwitch) {
                 g.setColor(Color.WHITE);
                 g.setFont(startFont);
@@ -212,16 +201,15 @@ public class Summative extends JComponent {
             g.setColor(Color.BLUE);
             g.drawString("" + player2Score, WIDTH / 2 + 135, 100);
 
-            //countdown numbers if the gameRun = 1 and if the number is greater than 0
+            //countdown numbers
             if (countNum > 0 && gameRun == 1) {
                 g.setColor(Color.BLACK);
                 g.setFont(countFont);
                 g.drawString("" + countNum, numX, numY);
             }
 
-
         }
-        //for which player reaches 10 points first, write that they won
+        //if one of the players gets ten points, say who won
         if (player1Score == 10) {
             g.setColor(Color.BLACK);
             g.setFont(winFont);
@@ -232,8 +220,7 @@ public class Summative extends JComponent {
             g.setFont(winFont);
             g.drawString("Blue Team Wins!", 30, HEIGHT / 2);
         }
-        
-        //when the gamerun = 2 ask they players to play again
+        //if the game run = 2, ask the players if they want to play again
         if (gameRun == 2) {
             g.setFont(againFont);
             g.drawString("Press The Space Bar To Play again", 15, 2 * HEIGHT / 3);
@@ -245,7 +232,7 @@ public class Summative extends JComponent {
     // This is run before the game loop begins!
     public void preSetup() {
         // Any of your pre setup before the loop starts should go here
-        //load background image for the start screen
+        //load the foosball image for the background of the start screen
         startBackground = loadImage("images/fooseball_01.jpg");
     }
 
@@ -268,9 +255,9 @@ public class Summative extends JComponent {
 
             // all your game rules and move is done in here
             // GAME LOGIC STARTS HERE 
-
-
-            if (gameRun == 1) { //gameRun = 1, create game Run variable
+            //gameRun = 1 then countdown method if the count number is over 0
+            //then have the game begin when the countdown reaches 0
+            if (gameRun == 1) {
                 if (countNum > 0) {
                     countdown();
                 } else {
@@ -345,27 +332,25 @@ public class Summative extends JComponent {
                     //updates y coordinate every second
                     ball.y += velocityY;
 
-                    //player 2 scores on p1 net
+                    //player 2 scores on p1 net, add score and reset the ball to the center
                     if (ball.x + ball.width <= 0 && ball.y >= HEIGHT / 3 && ball.y + ball.height <= 2 * HEIGHT) {
                         player2Score++;
-                        //countdown();
                         resetBall();
                     }
-                    //player 1 scores on p2 net
+                    //player 1 scores on p2 net, add score and reset the ball to the center
                     if (ball.x >= WIDTH && ball.y >= HEIGHT / 3 && ball.y + ball.height <= 2 * HEIGHT / 3) {
                         player1Score++;
-                        //countdown();
                         resetBall();
                     }
-
+                    //if someone wins, set gameRun to 2 so that players are asked to play again
                     if (player1Score == 10 || player2Score == 10) {
                         gameRun = 2;
                     }
 
-
                 }
             }
-
+            //when someone wins, if they want to play again
+            //set game run to 1 so the game repeats and variables are reset
             if (gameRun == 2) {
                 if (spacePressed) {
                     gameRun = 1;
@@ -462,7 +447,7 @@ public class Summative extends JComponent {
                 mPressed = true;
             }
 
-            //space key to begin game
+            //space key to begin game by setting gameRun = 1
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 spacePressed = true;
                 gameRun = 1;
@@ -754,6 +739,7 @@ public class Summative extends JComponent {
 
     //method to add a countdown until the round begins
     public void countdown() {
+        //if it's time to switch numbers, decrease by 1 and reset the other variables
         if (System.currentTimeMillis() >= nextSwitch) {
             countNum = countNum - 1;
             numX = WIDTH / 2 - 20;
@@ -761,19 +747,17 @@ public class Summative extends JComponent {
             fontSize = 80;
             r = 0;
             nextSwitch = System.currentTimeMillis() + textDelay;
-
+            //make the number grow
         } else {
             r++;
             fontSize = fontSize + r / 20;
             numX = numX - r / 45;
             numY = numY + r / 45;
-
         }
-
         countFont = new Font("Comic Sans", Font.BOLD, fontSize);
     }
-    //fooseball_01.jpg
 
+    //method for loading image for the start screen
     public BufferedImage loadImage(String filename) {
         BufferedImage img = null;
 
@@ -786,6 +770,7 @@ public class Summative extends JComponent {
         return img;
     }
 
+    //method to reset the variables when the players play again
     public void resetVariables() {
         player1Score = 0;
         player2Score = 0;
